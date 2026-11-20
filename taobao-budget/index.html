@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111d33">
+  <title>淘寶採購預算｜HK$700 記帳工具</title>
+  <style>
+    :root{--ink:#15243a;--muted:#637188;--bg:#f4f7fb;--card:#fff;--line:#e1e7f0;--blue:#3a69e6;--blue-soft:#ecf2ff;--green:#14805a;--green-soft:#e7f7ef;--red:#c23f4b;--red-soft:#feebee;--amber:#975c17;--amber-soft:#fff4df;--shadow:0 9px 32px rgba(24,43,82,.065)}
+    *{box-sizing:border-box}
+    html{font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;color:var(--ink);-webkit-text-size-adjust:100%}
+    body{margin:0;background:var(--bg);min-height:100vh}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #9bb7ff;outline-offset:2px}
+    .shell{max-width:1180px;margin:auto;padding:28px 22px 70px}
+    .hero{border-radius:26px;background:radial-gradient(ellipse at 93% 6%,rgba(80,137,240,.27),transparent 50%),linear-gradient(125deg,#111d33,#203a62);color:#fff;padding:30px 34px;box-shadow:0 15px 35px rgba(25,46,91,.15)}
+    .hero-head{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+    .eyebrow{font-size:12px;font-weight:750;letter-spacing:.17em;text-transform:uppercase;color:#adc5f7}
+    h1{font-size:clamp(25px,4vw,37px);margin:8px 0;letter-spacing:-.035em;line-height:1.23}
+    .hero p{color:#cbd7ec;margin:0;font-size:14px;line-height:1.65}
+    .hero-pill{border:1px solid #526990;border-radius:999px;padding:10px 15px;color:#e0eafe;font-size:13px;white-space:nowrap}
+    .controls{display:grid;grid-template-columns:1fr 1fr auto;align-items:end;gap:16px;margin:22px 0 4px}
+    .control{min-width:0}
+    label,.field-label{display:block;font-size:12px;font-weight:750;color:var(--muted);margin-bottom:7px;letter-spacing:.01em}
+    input,select,textarea{border:1px solid #d6deea;border-radius:11px;background:#fff;color:var(--ink);min-width:0;padding:11px 12px;line-height:1.4;width:100%;font-size:14px}
+    input[type=number]{font-variant-numeric:tabular-nums}
+    textarea{resize:vertical;min-height:44px}
+    .input-prefix{display:flex;align-items:center;background:#fff;border:1px solid #d6deea;border-radius:11px;overflow:hidden}
+    .input-prefix span{padding:0 12px;color:#738098;font-weight:800;font-size:13px;white-space:nowrap}
+    .input-prefix input{border:0;border-left:1px solid #e1e6ef;border-radius:0}
+    .button{appearance:none;border:1px solid #d7dfec;border-radius:11px;padding:11px 15px;background:#fff;color:#243a5a;font-size:13px;font-weight:750;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:43px;white-space:nowrap}
+    .button.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+    .button.ghost{background:#f7f9fc}
+    .button.danger{color:var(--red);border-color:#f1ced2;background:#fff}
+    .button:disabled{opacity:.52;cursor:not-allowed}
+    .notice{font-size:12px;color:#61718d;margin:11px 2px 0;line-height:1.6}
+    .summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:22px 0 18px}
+    .metric{background:var(--card);padding:19px;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);min-width:0}
+    .metric .name{font-size:12px;font-weight:750;color:var(--muted);margin-bottom:11px}
+    .metric .value{font-size:clamp(23px,2.5vw,31px);font-weight:850;letter-spacing:-.04em;line-height:1.15;white-space:nowrap}
+    .metric .value.positive{color:var(--green)}.metric .value.negative{color:var(--red)}
+    .metric .extra{font-size:12px;color:#8090a8;margin-top:10px;min-height:15px}
+    .spend-bar{background:#e7edf5;border-radius:999px;height:9px;overflow:hidden;margin:20px 0 5px}
+    .spend-fill{height:100%;width:0%;background:var(--blue);border-radius:999px;transition:width .18s}
+    .spend-fill.over{background:#dc5261}
+    .bar-caption{display:flex;justify-content:space-between;gap:10px;color:#60718a;font-size:12px;font-variant-numeric:tabular-nums;margin-bottom:25px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:21px;padding:22px;box-shadow:var(--shadow);margin-bottom:18px}
+    .section-title{margin:0 0 5px;font-size:19px;font-weight:830;letter-spacing:-.025em}
+    .section-subtitle{margin:0;color:#74829a;font-size:13px;line-height:1.65}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:19px}
+    .form-grid{display:grid;grid-template-columns:2.4fr .7fr 1fr .7fr 1fr;gap:13px}
+    .form-grid .wide{grid-column:span 2}
+    .form-grid .full{grid-column:1/-1}
+    .new-actions{display:flex;align-items:end;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-top:14px}
+    .hint{color:#77859a;font-size:12px;line-height:1.5}
+    .count-badge{background:var(--blue-soft);color:var(--blue);font-weight:800;font-size:12px;border-radius:999px;padding:7px 11px}
+    .filters{display:flex;gap:7px;flex-wrap:wrap}
+    .filter{border-radius:999px;padding:8px 14px;border:1px solid #dce3ed;background:#fff;color:#66768e;font-size:12px;font-weight:800}
+    .filter[aria-pressed=true]{background:#1b3765;color:#fff;border-color:#1b3765}
+    .items{display:grid;gap:13px}
+    .item{border:1px solid #dfe6ef;border-radius:16px;padding:18px;background:#fff}
+    .item-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:13px}
+    .item-heading{display:flex;align-items:center;gap:9px;min-width:0;flex-wrap:wrap}
+    .item-num{display:inline-grid;place-items:center;border-radius:9px;background:#f0f4fa;color:#61728c;font-size:12px;width:28px;height:28px;font-weight:800;flex-shrink:0}
+    .status{font-size:11px;font-weight:800;border-radius:999px;padding:5px 9px}
+    .status.paid{color:var(--green);background:var(--green-soft)}
+    .status.planned{color:var(--amber);background:var(--amber-soft)}
+    .status.refunded{color:var(--muted);background:#edf1f6}
+    .item-total{text-align:right;white-space:nowrap}
+    .item-total strong{display:block;font-size:19px;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+    .item-total small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+    .item-fields{display:grid;grid-template-columns:2.1fr .65fr 1fr .65fr 1fr 1.15fr;gap:11px}
+    .item-fields .notes{grid-column:span 3}
+    .item-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:13px;flex-wrap:wrap}
+    .item-foot .explain{font-size:12px;line-height:1.5;color:#74829a;flex:1}
+    .item-foot .button{min-height:34px;padding:7px 11px;font-size:12px}
+    .muted{color:#74829a}
+    .empty{border:1.5px dashed #cdd8e8;border-radius:16px;padding:42px 16px;text-align:center;background:#fafcff}
+    .empty .emoji{font-size:35px;margin-bottom:10px}
+    .empty strong{display:block;font-size:16px;margin-bottom:5px}
+    .empty p{color:#708098;font-size:13px;line-height:1.6;margin:0}
+    .tools{display:flex;flex-wrap:wrap;gap:10px}
+    .tools .button{min-height:39px}
+    .footer{font-size:12px;color:#79869b;line-height:1.85;margin:24px 4px 0}
+    .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,15px);background:#1c2e4c;color:#fff;padding:11px 18px;border-radius:999px;font-size:13px;box-shadow:0 8px 28px #17294140;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:10;max-width:90vw;text-align:center}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:950px){.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.form-grid{grid-template-columns:2fr 1fr 1fr}.item-fields{grid-template-columns:repeat(3,minmax(0,1fr))}.item-fields .notes{grid-column:span 2}}
+    @media(max-width:620px){.shell{padding:12px 12px 60px}.hero{padding:23px 21px;border-radius:20px}.hero-pill{display:none}.controls{grid-template-columns:1fr 1fr;gap:12px}.controls .update{grid-column:1/-1}.summary-grid{gap:10px;margin:15px 0}.metric{padding:15px 13px;border-radius:14px}.metric .value{font-size:22px}.metric .extra{font-size:11px}.card{padding:17px 14px;border-radius:17px}.form-grid{grid-template-columns:1fr 1fr;gap:11px}.form-grid .wide{grid-column:span 2}.form-grid .name-field{grid-column:span 2}.item{padding:14px}.item-fields{grid-template-columns:1fr 1fr;gap:10px}.item-fields .name-input{grid-column:span 2}.item-fields .notes{grid-column:span 2}.item-head{gap:5px}.item-total strong{font-size:17px}.section-head{align-items:flex-start}}
+    @media(max-width:350px){.summary-grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}}
+    @media print{body{background:#fff}.hero{background:#1d3151!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.button,.filters,.new-card,.tools,.toast{display:none!important}.item{break-inside:avoid}.shell{padding:0}.card,.metric{box-shadow:none}}
+  </style>
+</head>
+<body>
+<main class="shell">
+  <header class="hero">
+    <div class="hero-head">
+      <div>
+        <div class="eyebrow">Purchase &amp; Budget Tracker · 採購帳目</div>
+        <h1>淘寶採購預算</h1>
+        <p>記錄組員提供嘅預算、人民幣商品及港幣實際支出。</p>
+      </div>
+      <div class="hero-pill">💳 預算追蹤 · RMB + HKD</div>
+    </div>
+  </header>
+
+  <section class="controls" aria-label="預算及匯率設定">
+    <div class="control"><label for="budget">組員提供預算</label><div class="input-prefix"><span>HK$</span><input id="budget" type="number" inputmode="decimal" min="0" step="0.01" value="700"></div></div>
+    <div class="control"><label for="rate">1 人民幣（RMB）＝ 幾多港幣？</label><div class="input-prefix"><span>HK$</span><input id="rate" type="number" inputmode="decimal" min="0.00001" step="0.00001" value="1.17609"></div></div>
+    <button id="refresh-rate" class="button update" type="button">↻ 更新網上參考匯率</button>
+  </section>
+  <p class="notice" id="rate-note">參考匯率：2026-11-20 13:49（香港時間），1 RMB ≈ HK$1.17609。實際支付或退款可能因銀行、付款平台匯率及手續費而不同；可自行修改，或在每件商品填入「實際扣款 HKD」。</p>
+
+  <section class="summary-grid" aria-label="預算摘要">
+    <div class="metric"><div class="name">總預算</div><div id="budget-val" class="value">HK$700.00</div><div class="extra">組員提供款項</div></div>
+    <div class="metric"><div class="name">已購買／已付款</div><div id="spent-val" class="value">HK$0.00</div><div id="spent-count" class="extra">0 件採購項目</div></div>
+    <div class="metric"><div class="name">目前剩餘</div><div id="remaining-val" class="value positive">HK$700.00</div><div class="extra">總預算 − 已付款</div></div>
+    <div class="metric"><div class="name">連待購項目後剩餘</div><div id="forecast-val" class="value">HK$700.00</div><div id="planned-val" class="extra">待買估算：HK$0.00</div></div>
+  </section>
+  <div class="spend-bar" aria-label="已用預算比例"><div id="spend-fill" class="spend-fill"></div></div>
+  <div class="bar-caption"><span id="spend-percent">已使用 0.0%</span><span id="balance-warning">未超出預算</span></div>
+
+  <section class="card new-card">
+    <div class="section-head"><div><h2 class="section-title">＋ 新增商品</h2><p class="section-subtitle">商品價格可以用 RMB 或 HKD 輸入，運費／手續費跟隨該商品幣別。</p></div></div>
+    <form id="add-form" autocomplete="off">
+      <div class="form-grid">
+        <div class="control name-field"><label for="new-name">商品名稱 *</label><input id="new-name" required maxlength="100" placeholder="例如：ESP32-S3 / IR LED"></div>
+        <div class="control"><label for="new-qty">數量</label><input id="new-qty" type="number" inputmode="numeric" min="1" max="99999" step="1" value="1" required></div>
+        <div class="control"><label for="new-price">單價</label><input id="new-price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00" required></div>
+        <div class="control"><label for="new-currency">幣別</label><select id="new-currency"><option value="RMB">RMB · 人民幣</option><option value="HKD">HKD · 港幣</option></select></div>
+        <div class="control"><label for="new-shipping">運費／手續費</label><input id="new-shipping" type="number" inputmode="decimal" min="0" step="0.01" value="0"></div>
+        <div class="control"><label for="new-status">狀態</label><select id="new-status"><option value="paid">已付款</option><option value="planned">待購買</option><option value="refunded">已全額退款</option></select></div>
+        <div class="control"><label for="new-actual">實際扣款 HKD（可選）</label><input id="new-actual" type="number" inputmode="decimal" min="0" step="0.01" placeholder="沒有就留空"></div>
+        <div class="control wide"><label for="new-notes">備註／淘寶訂單號（可選）</label><input id="new-notes" maxlength="400" placeholder="店舖、訂單號、購買日期……"></div>
+      </div>
+      <div class="new-actions"><span class="hint">實際扣款優先於匯率估算；待購項目只計預算預測，不算已花費。</span><button class="button primary" type="submit">＋ 加入採購清單</button></div>
+    </form>
+  </section>
+
+  <section class="card">
+    <div class="section-head">
+      <div><h2 class="section-title">採購紀錄 <span id="item-count" class="count-badge">0</span></h2><p class="section-subtitle">直接修改以下欄位即可更新金額，變動會自動儲存在此瀏覽器。</p></div>
+      <div class="filters" role="group" aria-label="篩選採購狀態">
+        <button class="filter" type="button" data-filter="all" aria-pressed="true">全部</button>
+        <button class="filter" type="button" data-filter="paid" aria-pressed="false">已付款</button>
+        <button class="filter" type="button" data-filter="planned" aria-pressed="false">待購買</button>
+        <button class="filter" type="button" data-filter="refunded" aria-pressed="false">已退款</button>
+      </div>
+    </div>
+    <div id="items" class="items" aria-live="polite"></div>
+    <p class="notice" id="totals-note"></p>
+  </section>
+
+  <section class="card">
+    <div class="section-head"><div><h2 class="section-title">匯出／備份</h2><p class="section-subtitle">可以將帳目傳畀組員，或備份到另一部裝置。</p></div></div>
+    <div class="tools">
+      <button id="copy" type="button" class="button">📋 複製結算摘要</button>
+      <button id="csv" type="button" class="button">↓ 下載 CSV（Excel 可開啟）</button>
+      <button id="backup" type="button" class="button">↓ 備份 JSON</button>
+      <button id="restore" type="button" class="button">↑ 匯入 JSON</button>
+      <button id="print" type="button" class="button">⎙ 列印／儲存 PDF</button>
+      <button id="clear" type="button" class="button danger">清空所有紀錄</button>
+      <input id="restore-file" type="file" accept=".json,application/json" hidden>
+    </div>
+    <p class="notice">CSV（逗號分隔值）可用 Excel 開啟；JSON（資料備份格式）可完整保存並還原所有紀錄。資料只保存在當前瀏覽器，清理網站資料、無痕模式或轉換裝置可能導致資料遺失，建議定期備份。</p>
+  </section>
+  <p class="footer">計算方法：RMB 商品估算港幣＝（單價 × 數量＋運費）× 參考匯率；HKD 商品則直接以港幣計。已付款商品如果填寫「實際扣款 HKD」，會取代估算值。已全額退款的商品不列入支出。所有金額僅作組內採購記帳，並非銀行對帳單。</p>
+</main>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  'use strict';
+  const KEY='taobao_budget_tracker_v1';
+  const $=id=>document.getElementById(id);
+  const validStatus=['paid','planned','refunded'];
+  const round2=n=>Math.round((n+Number.EPSILON)*100)/100;
+  const money=n=>'HK$'+(Number.isFinite(n)?n:0).toLocaleString('en-HK',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const dateStamp=()=>new Date().toISOString().slice(0,10);
+  const numeric=(value,fallback=0)=>{if(value===''||value===null||value===undefined)return fallback;const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback};
+  const cleanItem=(x)=>({id:String(x.id||('item_'+Date.now()+'_'+Math.random().toString(36).slice(2))),name:String(x.name||'未命名商品').slice(0,100),qty:Math.max(1,Math.min(99999,Math.floor(numeric(x.qty,1)))),price:numeric(x.price),currency:x.currency==='HKD'?'HKD':'RMB',shipping:numeric(x.shipping),status:validStatus.includes(x.status)?x.status:'paid',actual:(x.actual===null||x.actual===''||x.actual===undefined)?null:numeric(x.actual),notes:String(x.notes||'').slice(0,400),created:String(x.created||dateStamp())});
+  let state={budget:700,rate:1.17609,rateNote:'參考匯率：2026-11-20 13:49（香港時間）',items:[]};
+  let filter='all',toastTimer;
+  try{
+    const s=JSON.parse(localStorage.getItem(KEY));
+    if(s&&typeof s==='object')state={budget:numeric(s.budget,700),rate:numeric(s.rate,1.17609)||1.17609,rateNote:typeof s.rateNote==='string'?s.rateNote:state.rateNote,items:Array.isArray(s.items)?s.items.slice(0,2000).map(cleanItem):[]};
+  }catch(e){console.warn('無法讀取儲存資料',e)}
+  const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){toast('儲存失敗：請使用 JSON 備份功能')}};
+  function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3000)}
+  function totalRaw(i){return i.price*i.qty+i.shipping}
+  function calc(i){let estimate=totalRaw(i)*(i.currency==='RMB'?state.rate:1);if(i.status==='paid'&&i.actual!==null)estimate=i.actual;return round2(estimate)}
+  function totals(){let spent=0,planned=0,paidCount=0,plannedCount=0,refundedCount=0,paidRmb=0,paidHkd=0;for(const i of state.items){if(i.status==='paid'){spent+=calc(i);paidCount++;if(i.currency==='RMB')paidRmb+=totalRaw(i);else paidHkd+=totalRaw(i)}else if(i.status==='planned'){planned+=calc(i);plannedCount++}else refundedCount++}return {spent:round2(spent),planned:round2(planned),paidCount,plannedCount,refundedCount,paidRmb:round2(paidRmb),paidHkd:round2(paidHkd)}}
+  function updateSummary(){
+    const t=totals(),remaining=round2(state.budget-t.spent),forecast=round2(remaining-t.planned),pct=state.budget>0?t.spent/state.budget*100:(t.spent>0?100:0);
+    $('budget-val').textContent=money(state.budget);$('spent-val').textContent=money(t.spent);$('remaining-val').textContent=money(remaining);$('forecast-val').textContent=money(forecast);$('spent-count').textContent=t.paidCount+' 項已付款';$('planned-val').textContent='待買估算：'+money(t.planned)+'（'+t.plannedCount+' 項）';
+    $('remaining-val').className='value '+(remaining<0?'negative':'positive');$('forecast-val').className='value '+(forecast<0?'negative':forecast===0?'':'positive');
+    $('spend-fill').style.width=Math.max(0,Math.min(100,pct))+'%';$('spend-fill').classList.toggle('over',remaining<0);$('spend-percent').textContent='已使用 '+pct.toFixed(1)+'%';$('balance-warning').textContent=remaining<0?'已超出預算 '+money(-remaining):'未超出預算';
+    $('item-count').textContent=state.items.length;$('totals-note').textContent='已付款原幣小計：RMB ¥'+t.paidRmb.toFixed(2)+' ＋ HKD $'+t.paidHkd.toFixed(2)+'（不同幣別不能直接相加；港幣總支出已在上方換算）｜已全額退款 '+t.refundedCount+' 項。';
+    $('rate-note').textContent=state.rateNote+'，1 RMB ≈ HK$'+state.rate.toFixed(5)+'。此為參考匯率；實際付款可能因銀行／付款平台匯率及手續費不同。建議為已付款商品填寫「實際扣款 HKD」。';
+  }
+  function render(){
+    for(const b of document.querySelectorAll('.filter'))b.setAttribute('aria-pressed',b.dataset.filter===filter?'true':'false');
+    const filtered=state.items.filter(i=>filter==='all'||i.status===filter);
+    $('items').innerHTML=filtered.length?filtered.map((i,index)=>{
+      const idx=state.items.findIndex(v=>v.id===i.id)+1;
+      const statusName={paid:'已付款',planned:'待購買',refunded:'已全額退款'}[i.status];
+      const calcDesc=i.status==='refunded'?'此商品已全額退款，不計入支出':i.status==='paid'&&i.actual!==null?'以實際扣款 HKD 計算':'依照 '+(i.currency==='RMB'?'RMB 兌 HKD 參考匯率':'港幣原價')+'估算';
+      return `<article class="item" data-id="${escapeHtml(i.id)}">
+        <div class="item-head"><div class="item-heading"><span class="item-num">${idx}</span><span class="status ${i.status}">${statusName}</span></div><div class="item-total"><strong data-out="total">${money(i.status==='refunded'?0:calc(i))}</strong><small data-out="raw">原幣 ${i.currency==='RMB'?'¥':'HK$'}${totalRaw(i).toFixed(2)}</small></div></div>
+        <div class="item-fields">
+          <div class="control name-input"><label>商品名稱</label><input data-field="name" maxlength="100" value="${escapeHtml(i.name)}"></div>
+          <div class="control"><label>數量</label><input data-field="qty" type="number" inputmode="numeric" min="1" max="99999" step="1" value="${i.qty}"></div>
+          <div class="control"><label>單價</label><input data-field="price" type="number" inputmode="decimal" min="0" step="0.01" value="${i.price}"></div>
+          <div class="control"><label>幣別</label><select data-field="currency"><option value="RMB" ${i.currency==='RMB'?'selected':''}>RMB</option><option value="HKD" ${i.currency==='HKD'?'selected':''}>HKD</option></select></div>
+          <div class="control"><label>運費／手續費（同幣別）</label><input data-field="shipping" type="number" inputmode="decimal" min="0" step="0.01" value="${i.shipping}"></div>
+          <div class="control"><label>實際扣款 HKD（可留空）</label><input data-field="actual" type="number" inputmode="decimal" min="0" step="0.01" value="${i.actual===null?'':i.actual}" placeholder="未有記錄"></div>
+          <div class="control"><label>採購狀態</label><select data-field="status"><option value="paid" ${i.status==='paid'?'selected':''}>已付款</option><option value="planned" ${i.status==='planned'?'selected':''}>待購買</option><option value="refunded" ${i.status==='refunded'?'selected':''}>已全額退款</option></select></div>
+          <div class="control notes"><label>備註／淘寶訂單號</label><input data-field="notes" maxlength="400" value="${escapeHtml(i.notes)}" placeholder="可填寫店舖或訂單號"></div>
+        </div><div class="item-foot"><span class="explain" data-out="hint">${calcDesc} · 加入日期 ${escapeHtml(i.created)}</span><button type="button" class="button danger remove" data-id="${escapeHtml(i.id)}">刪除</button></div>
+      </article>`;
+    }).join(''):`<div class="empty"><div class="emoji">🧾</div><strong>${state.items.length?'沒有符合條件的紀錄':'未有採購紀錄'}</strong><p>${state.items.length?'可以切換「全部」查看其他商品。':'在上方輸入淘寶商品資料，再按「加入採購清單」。'}</p></div>`;
+    updateSummary();
+  }
+  $('budget').value=state.budget;$('rate').value=state.rate;render();
+  $('budget').addEventListener('input',e=>{if(e.target.value==='')return;const v=Number(e.target.value);if(Number.isFinite(v)&&v>=0){state.budget=v;persist();updateSummary()}});
+  $('budget').addEventListener('change',e=>{e.target.value=state.budget});
+  $('rate').addEventListener('input',e=>{if(e.target.value==='')return;const v=Number(e.target.value);if(Number.isFinite(v)&&v>0){state.rate=v;state.rateNote='手動設定匯率';persist();updateSummary();refreshRows()}});
+  $('rate').addEventListener('change',e=>{e.target.value=state.rate});
+  function refreshRows(){for(const card of $('items').querySelectorAll('.item')){const i=state.items.find(v=>v.id===card.dataset.id);if(!i)continue;card.querySelector('[data-out="total"]').textContent=money(i.status==='refunded'?0:calc(i));card.querySelector('[data-out="raw"]').textContent='原幣 '+(i.currency==='RMB'?'¥':'HK$')+totalRaw(i).toFixed(2);card.querySelector('[data-out="hint"]').textContent=(i.status==='refunded'?'此商品已全額退款，不計入支出':i.status==='paid'&&i.actual!==null?'以實際扣款 HKD 計算':'依照 '+(i.currency==='RMB'?'RMB 兌 HKD 參考匯率':'港幣原價')+'估算')+' · 加入日期 '+i.created}}
+  $('add-form').addEventListener('submit',e=>{
+    e.preventDefault();const name=$('new-name').value.trim();if(!name){toast('請輸入商品名稱');$('new-name').focus();return}
+    const qty=Math.floor(Number($('new-qty').value)),price=Number($('new-price').value),shipping=Number($('new-shipping').value);
+    if(!Number.isFinite(qty)||qty<1||qty>99999||!Number.isFinite(price)||price<0||!Number.isFinite(shipping)||shipping<0){toast('請檢查數量、價錢及運費');return}
+    let actual=null;if($('new-actual').value.trim()!==''){actual=Number($('new-actual').value);if(!Number.isFinite(actual)||actual<0){toast('實際扣款不能是負數');return}}
+    state.items.unshift(cleanItem({id:'item_'+Date.now()+'_'+Math.random().toString(36).slice(2),name,qty,price,currency:$('new-currency').value,shipping,status:$('new-status').value,actual,notes:$('new-notes').value,created:dateStamp()}));
+    persist();$('add-form').reset();$('new-qty').value=1;$('new-shipping').value=0;filter='all';render();$('new-name').focus();toast('已加入：'+name)
+  });
+  $('items').addEventListener('input',e=>{
+    const inp=e.target,field=inp.dataset.field;if(!field)return;const card=inp.closest('.item'),i=state.items.find(v=>v.id===card.dataset.id);if(!i)return;
+    if(['name','notes'].includes(field))i[field]=inp.value;
+    else if(field==='actual')i.actual=inp.value===''?null:numeric(inp.value);
+    else if(field==='qty'){if(inp.value==='')return;i.qty=Math.max(1,Math.min(99999,Math.floor(numeric(inp.value,1))))}
+    else if(['price','shipping'].includes(field)){if(inp.value==='')return;i[field]=numeric(inp.value)}
+    persist();updateSummary();refreshRows();
+  });
+  $('items').addEventListener('change',e=>{
+    const inp=e.target,field=inp.dataset.field;if(!field)return;const card=inp.closest('.item'),i=state.items.find(v=>v.id===card.dataset.id);if(!i)return;
+    if(field==='currency'&&['RMB','HKD'].includes(inp.value))i.currency=inp.value;
+    else if(field==='status'&&validStatus.includes(inp.value))i.status=inp.value;
+    else if(field==='name')i.name=inp.value.trim()||'未命名商品';
+    else if(field==='actual')i.actual=inp.value===''?null:numeric(inp.value);
+    else if(field==='qty')i.qty=Math.max(1,Math.min(99999,Math.floor(numeric(inp.value,1))));
+    else if(['price','shipping'].includes(field))i[field]=numeric(inp.value);
+    persist();render();
+  });
+  $('items').addEventListener('click',e=>{const btn=e.target.closest('.remove');if(!btn)return;const i=state.items.find(v=>v.id===btn.dataset.id);if(!i)return;if(!confirm('確定要刪除「'+i.name+'」？'))return;state.items=state.items.filter(v=>v.id!==i.id);persist();render();toast('已刪除商品')});
+  for(const btn of document.querySelectorAll('.filter'))btn.addEventListener('click',()=>{filter=btn.dataset.filter;render()});
+  $('refresh-rate').addEventListener('click',async()=>{
+    const btn=$('refresh-rate');btn.disabled=true;btn.textContent='更新中…';
+    try{
+      const controller=new AbortController();const t=setTimeout(()=>controller.abort(),9000);
+      let data;try{const res=await fetch('https://open.er-api.com/v6/latest/CNY',{signal:controller.signal,cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);data=await res.json()}finally{clearTimeout(t)}
+      if(data.result!=='success'||!Number.isFinite(data.rates?.HKD)||data.rates.HKD<=0)throw Error('不正確的匯率資料');
+      state.rate=Number(data.rates.HKD);state.rateNote='線上參考匯率更新（來源：open.er-api.com；資料日期 '+(data.time_last_update_utc||'未提供')+'）';$('rate').value=state.rate.toFixed(5);persist();updateSummary();refreshRows();toast('參考匯率已更新');
+    }catch(e){toast('未能更新網上匯率，請使用手動設定（離線亦可使用）');console.warn(e)}finally{btn.disabled=false;btn.textContent='↻ 更新網上參考匯率'}
+  });
+  function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+  function summaryText(){const t=totals();return ['淘寶採購預算結算','預算：'+money(state.budget),'匯率：1 RMB = HK$'+state.rate.toFixed(5),'已付款：'+money(t.spent),'待購買估算：'+money(t.planned),'目前餘額：'+money(state.budget-t.spent),'待購全部買完後預計餘額：'+money(state.budget-t.spent-t.planned),'',...state.items.map((i,n)=>`${n+1}. ${i.name}｜${i.status==='paid'?'已付款':i.status==='planned'?'待購買':'已全額退款'}｜${i.currency} ${(i.price*i.qty+i.shipping).toFixed(2)}｜計入 ${money(i.status==='refunded'?0:calc(i))}${i.notes?'｜'+i.notes:''}`)].join('\n')}
+  $('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(summaryText());toast('已複製結算摘要')}catch(e){const ta=document.createElement('textarea');ta.value=summaryText();document.body.append(ta);ta.select();const success=document.execCommand('copy');ta.remove();toast(success?'已複製結算摘要':'無法自動複製，請用匯出 CSV')}});
+  const csvCell=s=>'"'+String(s??'').replace(/"/g,'""')+'"';
+  $('csv').addEventListener('click',()=>{const rows=[['商品名稱','數量','單價','幣別','運費及手續費(同幣別)','原幣合計','實際扣款HKD(可空白)','記帳港幣金額','狀態','備註','加入日期'],...state.items.map(i=>[i.name,i.qty,i.price,i.currency,i.shipping,round2(totalRaw(i)),i.actual??'',i.status==='refunded'?0:calc(i),{paid:'已付款',planned:'待購買',refunded:'已全額退款'}[i.status],i.notes,i.created]),[],['預算(HKD)',state.budget],['參考匯率(1 RMB → HKD)',state.rate],['已付款(HKD)',totals().spent],['待購估算(HKD)',totals().planned],['目前餘額(HKD)',round2(state.budget-totals().spent)],['全數購入後預計餘額(HKD)',round2(state.budget-totals().spent-totals().planned)]];const csv='\ufeff'+rows.map(row=>row.map(csvCell).join(',')).join('\r\n');download('淘寶採購記帳_'+dateStamp()+'.csv',csv,'text/csv;charset=utf-8');toast('已匯出 CSV')});
+  $('backup').addEventListener('click',()=>{download('淘寶採購備份_'+dateStamp()+'.json',JSON.stringify({version:1,exportedAt:new Date().toISOString(),...state},null,2),'application/json;charset=utf-8');toast('已匯出 JSON 備份')});
+  $('restore').addEventListener('click',()=>$('restore-file').click());
+  $('restore-file').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>3000000)throw Error('檔案太大');const data=JSON.parse(await file.text());if(!data||typeof data!=='object'||!Array.isArray(data.items)||data.items.length>2000)throw Error('備份格式不正確');if(!confirm('匯入會覆蓋現有紀錄，確定繼續？'))return;state={budget:numeric(data.budget,700),rate:numeric(data.rate,1.17609)||1.17609,rateNote:typeof data.rateNote==='string'?data.rateNote:'由備份匯入的匯率',items:data.items.map(cleanItem)};$('budget').value=state.budget;$('rate').value=state.rate;filter='all';persist();render();toast('已還原 '+state.items.length+' 項商品')}catch(err){toast('匯入失敗：'+err.message)}finally{e.target.value=''}});
+  $('clear').addEventListener('click',()=>{if(!confirm('確定清空所有採購紀錄？此操作無法復原。建議先按「備份 JSON」。'))return;state.items=[];persist();render();toast('紀錄已清空')});
+  $('print').addEventListener('click',()=>window.print());
+})();
+</script>
+</body>
+</html>
